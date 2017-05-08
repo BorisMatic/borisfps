@@ -25,35 +25,11 @@ function animate() {
 
 //---------------------------------------------------------------------------------------------
                
+    controls.setStick();
 
-                //------igranje sa raycasterom---------------------------
-               // raycaster.ray.origin.copy( position );
-               // raycaster.ray.direction=controls.getRot();
-
-                raycaster.set(position,controls.getRot());
-                //document.getElementById("rotacija").innerHTML = raycaster.ray.origin.x;
-                //console.log(scene.getObjectByName( "stub" ));
-               // var boxDistance = raycaster.intersectObject(scene.getObjectByName( "chest" ));
-             /*   if (boxDistance.length>0) 
-                {
-                   document.getElementById("rotacija").innerHTML = "true"; 
-                }
-                else
-                {
-                    document.getElementById("rotacija").innerHTML = "false";
-                }*/
-                ///document.getElementById("rotacija").innerHTML = chest;
-                //console.log(controls.getRot());
-
-                //document.getElementById("rotacija").innerHTML = controls.getRot().x + "<br>" +controls.getRot().y +"<br>"+controls.getRot().z;
-                //-------------------------------------------------------
-               // document.getElementById("rotacija").innerHTML = controls.getState();
-
-                        // Update ball positions
-                    for(var i=0; i<balls.length; i++){
-                        ballMeshes[i].position.copy(balls[i].position);
-                        ballMeshes[i].quaternion.copy(balls[i].quaternion);
-                    }
+    // Update ball positions
+    controls.animateBalls();
+    flyingObjects.animateObjects();
 
     var statDat= 
     {

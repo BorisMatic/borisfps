@@ -56,3 +56,15 @@ Players.prototype.animate = function(delta)
         }
     }
 }
+
+Players.prototype.getClickedPlayer = function(stick)
+{
+    for (var key in this.players) {
+        var playerDistance = stick.intersectObject(this.players[key].getObject());
+        if (playerDistance.length>0) 
+        {
+            return key;
+        }
+
+    }
+}

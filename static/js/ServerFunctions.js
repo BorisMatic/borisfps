@@ -24,4 +24,20 @@ socket.on('out', function(msg){
     players.removePlayer(msg);
 });
 
+socket.on('addBalls', function(msg){
+    flyingObjects.addObjects(msg);
+});
+
+socket.on('removeChestWeapon', function(msg){
+    chests.chests[msg.chestId].removeWeapon(msg.weaponName);
+});
+
+socket.on('setLockChest', function(msg){
+    chests.chests[msg.chestId].setLocked(msg.lock);
+});
+
+socket.on('damagePlayer', function(msg){
+    controls.damageMe(msg);
+});
+
 

@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var positions =[{x:0,y:1,z:8},{x:6.92,y:1,z:4},{x:6.92,y:1,z:-4},{x:0,y:1,z:-8},{x:-6.92,y:1,z:-4},{x:-6.92,y:1,z:4}];
 var clients =[];
+var chests = new Chests();
 
 app.use(express.static(__dirname + '/static'));
 
@@ -30,6 +31,17 @@ io.on('connection', function(socket){
     	};
 	 	
 	 });
+
+    socket.on("damagePlayer",function(msg){
+        for (var i = clients.length-1; i >= 0; i--) {
+            if (clients[i].name == msg.key) 
+                {
+                    io.sockets.connected[clients[i].name].emit("damagePlayer", msg.damage);
+                };
+        };
+        
+     });
+
 	 socket.broadcast.emit('addPlayer', clients[clients.length-1]);
 	 
 	 
@@ -50,6 +62,33 @@ io.on('connection', function(socket){
     			};
     	};
  	 });
+
+    socket.on('addBalls', function(flyingBall){
+        for (var i = clients.length-1; i >= 0; i--) {
+            if (clients[i].name == socket.id) 
+                {
+                   socket.broadcast.emit('addBalls', flyingBall);
+                };
+        };
+     });
+
+    socket.on('removeChestWeapon', function(removedData){
+        for (var i = clients.length-1; i >= 0; i--) {
+            if (clients[i].name == socket.id) 
+                {
+                   socket.broadcast.emit('removeChestWeapon', removedData);
+                };
+        };
+     });
+
+    socket.on('setLockChest', function(lockedChestData){
+        for (var i = clients.length-1; i >= 0; i--) {
+            if (clients[i].name == socket.id) 
+                {
+                   socket.broadcast.emit('setLockChest', lockedChestData);
+                };
+        };
+     });
 
 	 socket.on('disconnect', function(){
 	 	counter--;
@@ -101,4 +140,64 @@ function Players(name,position)
     }
 
 }
+
+function Chest()
+{
+    this.weapons =[];
+
+    this.addWeapon = function(weapon,numberOfWeapon)
+    {
+        this.weapons.push({
+            weapon:weapon,
+            number:numberOfWeapon
+        });
+    }
+
+    this.getWeapons = function()
+    {
+        return this.weapons;
+    }
+
+    this.removeWeapon = function(name)
+    {
+        console.log(name);
+        for (var i = 0; i < this.weapons.length ; i++) {
+            if (this.weapons[i].weapon == name) {
+                this.weapons.splice(i,1);
+                return;
+            }
+        }
+    }
+}
+
+
+
+function Chests()
+{
+    this.chests=[];
+    
+    this.setChestsContent= function()
+    {
+        this.chests.push(new Chest());
+        this.chests.push(new Chest());
+        this.chests.push(new Chest());
+        this.chests.push(new Chest());
+        this.chests[0].addWeapon("middleSword",1);
+        this.chests[0].addWeapon("longSword",1);
+        this.chests[0].addWeapon("knife",2);
+        this.chests[0].addWeapon("bow",1);
+        this.chests[0].addWeapon("arrow",6);
+        this.chests[1].addWeapon("bow",1);
+        this.chests[1].addWeapon("arrow",6);
+        this.chests[1].addWeapon("middleSword",1);
+        this.chests[1].addWeapon("longSword",1);
+        this.chests[2].addWeapon("longSword",1);
+        this.chests[2].addWeapon("knife",3,1);
+        this.chests[2].addWeapon("middleSword",1);
+        this.chests[2].addWeapon("longSword",1);
+    }
+    this.setChestsContent();
+}
+
+
 

@@ -1,6 +1,7 @@
 JsonObjects = function()
 {
     this.loader = new THREE.JSONLoader();
+    this.loader.showStatus = true;
     this.animatedObjects = [];
     this.staticObjects = [];
     this.animatedObjects["punch"]=undefined;
@@ -21,7 +22,7 @@ JsonObjects.prototype.loadAnimatedObject = function(fileName,name,uv,animatedObj
 
 JsonObjects.prototype.loadStaticObject = function(fileName,name,uv)
 {
-    this.loader.load( fileName, function( geometry,materials ) {
+    var kk =this.loader.load( fileName, function( geometry,materials ) {
         materials = new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( uv ),ambient: 0x999999, color: 0xffffff, specular: 0xffffff, shininess: 25 } );
 
         var obj = new THREE.Mesh( geometry, materials );      
@@ -29,7 +30,9 @@ JsonObjects.prototype.loadStaticObject = function(fileName,name,uv)
         obj.castShadow = true;
         obj.receiveShadow = true;
         scene.add(obj);
+        return obj;
     });
+    return kk;
 }
 
 JsonObjects.prototype.addanimatedObjects = function()
@@ -46,7 +49,15 @@ JsonObjects.prototype.addanimatedObjects = function()
 JsonObjects.prototype.addStaticObjects = function()
 {
     //this.loadStaticObject("stubovi4.json","pillars");
-     this.loader.load( "json/terrain.json", this.modelToScene );
+    /* this.loader.load( "json/terrain.json", this.modelToScene );
+     this.loader.load( "json/drvo.json", this.treeToScene );*/
+    this.kkStaticObject("json/terrain.json", "terrain");
+    this.kkStaticObject("json/drvo.json", "tree");
+    this.kkStaticObject("json/knifeStatic.json", "knife");
+    this.kkStaticObject("json/arrow.json", "arrow");
+    this.kkStaticObject("json/temple.json", "temple");
+    this.kkStaticObject("json/bigTemple.json", "bigTemple");
+    this.kkStaticObject("json/chestjoj.json","chest","images/chestTexture.png");
 }
 
 JsonObjects.prototype.getAnimatedObject = function(name)
@@ -59,12 +70,38 @@ JsonObjects.prototype.getStaticObject = function(name)
     return this.staticObjects[name];
 }
 
-JsonObjects.prototype.modelToScene = function( geometry, materials,obj ) {
-     var material = new THREE.MeshFaceMaterial( materials );
-     var obj = new THREE.Mesh( geometry, material );
-     obj.name="terrain";
-     obj.scale.set(3.8,0.5,3.8);
-     obj.receiveShadow=true;
-    scene.add( obj );
+
+JsonObjects.prototype.kkStaticObject = function(fileName,name)
+{
+    var staticObjects = this.staticObjects;
+    this.loader.load( fileName, function( geometry, materials,obj ) {
+        var material = new THREE.MeshFaceMaterial( materials );
+        var obj = new THREE.Mesh( geometry, material );
+        obj.name=name;  
+        obj.receiveShadow=true;
+       // obj.castShadow=true;
+
+        if (name == "tree") {
+            var pom1 = obj.clone();
+            pom1.position.set(-55,7,25);
+            scene.add(pom1);
+            var pom2 = obj.clone();
+            pom2.position.set(-55,6,0);
+            scene.add(pom2);
+            var pom3 = obj.clone();
+            pom3.scale.set(2,0.75,2);
+            pom3.rotation.set(3,0.75,3);
+            pom3.position.set(-75,10,-55);
+            scene.add(pom3);
+        }
+            staticObjects[name]=obj;   
+        if (name!="chest") 
+        {
+            scene.add( obj ); 
+        }        
+    });
+
 }
+
+
 

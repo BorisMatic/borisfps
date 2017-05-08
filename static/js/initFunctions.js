@@ -17,7 +17,7 @@
                 else
                     world.solver = solver;
 
-                world.gravity.set(0,-20,0);
+                world.gravity.set(0,-50,0);
                 world.broadphase = new CANNON.NaiveBroadphase();
                         // Materials
         var groundMaterial = new CANNON.Material("groundMaterial");
@@ -41,7 +41,7 @@
                 sphereBody = new CANNON.Body({ mass: mass , material: groundMaterial});
                 sphereBody.addShape(sphereShape);
                 sphereBody.position.set(0,2,0);
-                sphereBody.linearDamping = 0.9;
+                sphereBody.linearDamping = 0.3;
                 world.add(sphereBody);
 
                 // Create a plane
@@ -50,7 +50,7 @@
                 var groundBody = new CANNON.Body({ mass: 0 , material: groundMaterial});
                 groundBody.addShape(groundShape);
                 groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
-                world.add(groundBody);
+               // world.add(groundBody);
                // world.gravity.set(-3,0,-60);
             }
 
@@ -63,8 +63,7 @@
                 terrain = new Terrain(jsonObjectLoader);
                 terrain.addToScene(scene);
                 terrain.setSkyBoxPosition(camera.position);
-
-
+                
                 controls = new PointerLockControls( camera , sphereBody );//dodao loptu koju je definisao  gore
                 scene.add( controls.getObject() );
 
@@ -81,7 +80,7 @@
 
                 
                 // Add box
-                var halfExtents = new CANNON.Vec3(1,1,1);
+                var halfExtents = new CANNON.Vec3(23,4,51.7);
                 var boxShape = new CANNON.Box(halfExtents);
                 var boxGeometry = new THREE.BoxGeometry(halfExtents.x*2,halfExtents.y*2,halfExtents.z*2);
                     var boxBody = new CANNON.Body();
@@ -89,9 +88,9 @@
                     var boxMesh = new THREE.Mesh( boxGeometry, new THREE.MeshPhongMaterial({color: 'red' }));
                     boxMesh.name = "box";
                     world.add(boxBody);
-                    scene.add(boxMesh);
-                    boxBody.position.set(0,1,-12);
-                    boxMesh.position.set(0,1,-12);
+                  //  scene.add(boxMesh);
+                    boxBody.position.set(67,1.6,-15.5);
+                    boxMesh.position.set(67,1.6,-15.5);
                     boxMesh.castShadow = true;
                     boxMesh.receiveShadow = true;
 
